@@ -1,4 +1,4 @@
-# kvault
+# Konsensus
 
-Simple Miniature Key-Value Datastore
+Simple Clustering by consensus library in Python
 
