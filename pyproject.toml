@@ -1,7 +1,7 @@
 [tool.poetry]
-name = "kvault"
+name = "konsensus"
 version = "0.1.0"
-description = "Simple Miniature key-value datastore"
+description = "Simple clustering by consensus library"
 authors = ["BrianLusina <12752833+BrianLusina@users.noreply.github.com>"]
 license = "MIT"
 

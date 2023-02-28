@@ -6,23 +6,16 @@ install:
 run:
 	python asgi_server.py
 
-# Runs the application with reload flag set
-run-reload:
-	uvicorn app:app --port 5000 --reload
-
 # Runs tests
 test:
 	pytest
 
 # Runs tests with coverage
 test-cover:
-	pytest --cov=app tests/
+	pytest --cov=konsensus tests/
 
 format:
-	black app
+	black konsensus
 
 lint:
-	pylint app
-
-load-test:
-	locust --config .locust.conf
+	pylint konsensus
