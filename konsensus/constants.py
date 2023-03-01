@@ -1,4 +1,4 @@
-from .data_types import Ballot, Proposal
+from .entities.data_types import Ballot, Proposal
 
 
 JOIN_RETRANSMIT = 0.7
