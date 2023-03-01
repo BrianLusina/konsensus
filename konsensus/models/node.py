@@ -3,7 +3,7 @@ from typing import List
 from itertools import count
 from functools import partial
 import logging
-from .role import Role
+from .roles import Role
 from ..infra.logger import SimTimeLogger
 
 
