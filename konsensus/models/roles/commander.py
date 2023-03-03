@@ -1,9 +1,9 @@
-from typing import List, Dict
+from typing import List
 from . import Role
 from ..node import Node
 from konsensus.entities.data_types import Ballot, Proposal
-from konsensus.entities.messages_types import Prepare, Adopted, Preempted, Accept, Decided, Decision
-from konsensus.constants import PREPARE_RETRANSMIT, ACCEPT_RETRANSMIT
+from konsensus.entities.messages_types import Preempted, Accept, Decided, Decision
+from konsensus.constants import ACCEPT_RETRANSMIT
 
 
 class Commander(Role):
