@@ -2,7 +2,7 @@ from typing import List, Callable
 from . import Role
 from ..node import Node
 from .bootstrap import Bootstrap
-from konsensus.entities.messages_types import Join, Welcome
+from konsensus.entities.messages_types import Welcome
 from konsensus.constants import JOIN_RETRANSMIT
 
 
