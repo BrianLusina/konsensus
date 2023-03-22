@@ -15,25 +15,24 @@ class BaseTestCase(unittest.TestCase):
 
     def assertMessage(self, destinations, message):
         got = self.node.sent.pop(0)
-        self.assertEqual((sorted(got[0]), got[1]),
-                         (sorted(destinations), message))
+        self.assertEqual((sorted(destinations), message), (sorted(got[0]), got[1]))
 
     def assertNoMessages(self):
-        self.assertEqual(self.node.sent, [])
+        self.assertEqual([], self.node.sent)
 
     def assertTimers(self, times):
-        self.assertEqual(self.node.network.get_times(), times)
+        self.assertEqual(times, self.node.network.get_times())
 
     def assertUnregistered(self):
-        self.assertEqual(self.node.roles, [])
+        self.assertEqual([], self.node.roles)
 
     def verifyAcceptedProposals(self, accepted_proposals):
         """Verify that the ``accepted_proposals`` field of a promise is formatted
         as a dictionary mapping slots to (ballot, proposal) tuples."""
         self.assertIsInstance(accepted_proposals, dict)
         for k, v in accepted_proposals.items():
-            self.assertIsInstance(k, int)
-            self.assertIsInstance(v, tuple)
-            self.assertEqual(len(v), 2)
-            self.assertIsInstance(v[0], Ballot)
-            self.assertIsInstance(v[1], Proposal)
+            self.assertIsInstance(int, k)
+            self.assertIsInstance(tuple, v)
+            self.assertEqual(2, len(v))
+            self.assertIsInstance(Ballot, v[0])
+            self.assertIsInstance(Proposal, v[1])
