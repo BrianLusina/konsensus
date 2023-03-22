@@ -9,8 +9,8 @@ import random
 import heapq
 from functools import partial
 from copy import deepcopy
-from models.node import Node
-from models.timer import Timer
+from .models.node import Node
+from .models.timer import Timer
 
 
 class Network:
@@ -34,8 +34,8 @@ class Network:
         self.rnd = random.Random(seed)
         self.timers: List[Timer] = []
         self.now = 1000.0
-    
-    def new_node(self, address:Optional[str]=None) -> Node:
+
+    def new_node(self, address: Optional[str] = None) -> Node:
         node = Node(self, address=address)
         self.nodes[node.address] = node
         return node
@@ -50,17 +50,18 @@ class Network:
                 continue
             if not next_timer.address or next_timer.address in self.nodes:
                 next_timer.callback()
-    
+
     def stop(self):
         self.timers = []
-    
+
     def set_timer(self, address, seconds: int, callback: Callable) -> Timer:
         timer = Timer(self.now + seconds, address, callback)
         heapq.heappush(self.timers, timer)
         return timer
-    
+
     def send(self, sender, destinations, message):
         sender.logger.debug(f"sending {message} to {destinations}")
+
         # avoid aliasing by making a closure containing distinct deep copy of message for each destination
         def sendto(dest, message):
             if dest == sender.address:

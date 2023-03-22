@@ -1,10 +1,11 @@
+from __future__ import annotations
 from typing import Callable
-from node import Node
+from ..node import Node
 
 
 class Role:
     """Represents roles corresponding to the cluster"""
-    def __init__(self, node: Node) -> None:
+    def __init__(self, node: 'Node') -> None:
         self.node = node
         self.node.register(self)
         self.running = True

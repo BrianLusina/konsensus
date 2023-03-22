@@ -1,9 +1,11 @@
 from __future__ import annotations
-from typing import List
+from typing import List, TYPE_CHECKING
 from itertools import count
 from functools import partial
 import logging
-from .roles import Role
+
+if TYPE_CHECKING:
+    from .roles import Role
 from ..infra.logger import SimTimeLogger
 
 
@@ -21,17 +23,17 @@ class Node:
         self.address = address or f'N{self.unique_ids.next()}'
         self.logger = SimTimeLogger(logging.getLogger(self.address), {'network': self.network})
         self.logger.info('starting')
-        self.roles: List[Role] = []
-        self.send = partial(self.network.send, self)    
+        self.roles: List['Role'] = []
+        self.send = partial(self.network.send, self)
 
-    def register(self, role: Role):
+    def register(self, role: 'Role'):
         self.roles.append(role)
-    
-    def unregister(self, role: Role):
+
+    def unregister(self, role: 'Role'):
         self.roles.remove(role)
-    
+
     def receive(self, sender, message):
-        handler_name = 'do_%s' % type(message).__name__
+        handler_name = f'do_{type(message).__name__}'.lower()
 
         for comp in self.roles[:]:
             if not hasattr(comp, handler_name):
