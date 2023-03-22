@@ -1,4 +1,5 @@
 from typing import List
+from math import floor
 from . import Role
 from ..node import Node
 from konsensus.entities.data_types import Ballot, Proposal
@@ -21,19 +22,20 @@ class Commander(Role):
         self.proposal = proposal
         self.acceptors = set([])
         self.peers = peers
-        self.quorum = len(peers) / 2 + 1
-    
+        self.quorum = floor(len(peers) / 2 + 1)
+
     def start(self):
-        self.node.send(set(self.peers) - self.acceptors, Accept(slot=self.slot, ballot_num=self.ballot_num, proposal=self.proposal))
+        self.node.send(set(self.peers) - self.acceptors,
+                       Accept(slot=self.slot, ballot_num=self.ballot_num, proposal=self.proposal))
         self.set_timer(ACCEPT_RETRANSMIT, self.start)
-    
+
     def finished(self, ballot_num: Ballot, preempted: bool):
         if preempted:
             self.node.send([self.node.address], Preempted(slot=self.slot, preempted_by=ballot_num))
         else:
             self.node.send([self.node.address], Decided(slot=self.slot))
         self.stop()
-    
+
     def do_accepted(self, sender, slot: int, ballot_num: Ballot):
         if slot != self.slot:
             return
