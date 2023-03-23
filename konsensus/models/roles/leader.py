@@ -26,39 +26,40 @@ class Leader(Role):
         self.scout = scout
         self.scouting = False
         self.peers = peers
-    
+
     def start(self):
         # remind others we are active before LEADER_TIMEOUT expires
         def active():
             if self.active:
                 self.node.send(self.peers, Active())
             self.set_timer(LEADER_TIMEOUT / 2.0, active)
+
         active()
-    
+
     def spawn_scout(self):
         assert not self.scouting
         self.scouting = True
         self.scout(self.node, self.ballot_num, self.peers).start()
 
-    def do_adopted(self, accepted_proposals: Dict[int, Proposal]):
+    def do_adopted(self, sender, ballot_num: Ballot, accepted_proposals: Dict[int, Proposal]):
         self.scouting = False
         self.proposals.update(accepted_proposals)
         # note that we don't re-spawn commanders here; if there are undecided proposals, the replicas will re-propose
         self.logger.info("leader becoming active")
         self.active = True
-    
+
     def spawn_commander(self, ballot_num: Ballot, slot: int):
         proposal = self.proposals[slot]
         self.commander(self.node, ballot_num, slot, proposal, self.peers).start()
-    
-    def do_preempted(self, slot, preempted_by):
-        if not slot: #from the scout
+
+    def do_preempted(self, sender, slot, preempted_by):
+        if not slot:  # from the scout
             self.scouting = False
         self.logger.info(f"leader preempted by {preempted_by.leader}")
         self.active = False
         self.ballot_num = Ballot((preempted_by or self.ballot_num).n + 1, self.ballot_num.leader)
 
-    def do_propose(self, sender, slot: int, proposal:Proposal):
+    def do_propose(self, sender, slot: int, proposal: Proposal):
         if slot not in self.proposals:
             if self.active:
                 self.proposals[slot] = proposal
