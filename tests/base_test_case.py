@@ -1,5 +1,5 @@
 from konsensus.entities.data_types import Ballot, Proposal
-from .fake_network import FakeNetwork, FakeNode
+from .utils.fake_network import FakeNetwork, FakeNode
 import unittest
 
 
@@ -31,8 +31,8 @@ class BaseTestCase(unittest.TestCase):
         as a dictionary mapping slots to (ballot, proposal) tuples."""
         self.assertIsInstance(accepted_proposals, dict)
         for k, v in accepted_proposals.items():
-            self.assertIsInstance(int, k)
-            self.assertIsInstance(tuple, v)
+            self.assertIsInstance(k, int)
+            self.assertIsInstance(v, tuple)
             self.assertEqual(2, len(v))
-            self.assertIsInstance(Ballot, v[0])
-            self.assertIsInstance(Proposal, v[1])
+            self.assertIsInstance(v[0], Ballot)
+            self.assertIsInstance(v[1], Proposal)

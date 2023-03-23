@@ -1,5 +1,9 @@
 import threading
 from queue import Queue
+from .roles.seed import Seed
+from .roles.bootstrap import Bootstrap
+from .roles.requester import Requester
+from ..network import Network
 
 
 class Member:
@@ -13,13 +17,13 @@ class Member:
     The method uses a simple synchronized Queue to wait for the result from the protocol thread.    
     """
 
-    def __init__(self, state_machine, network, peers, seed=None, seed_cls=Seed, bootstrap_cls=Bootstrap) -> None:
+    def __init__(self, state_machine, network: Network, peers, seed=None, seed_cls=Seed, bootstrap=Bootstrap) -> None:
         self.network = network
         self.node = network.new_node()
         if seed is not None:
             self.startup_role = seed_cls(self.node, initial_state=seed, peers=peers, execute_fn=state_machine)
         else:
-            self.startup_role = bootstrap_cls(self.node, execute_fn=state_machine, peers=peers)
+            self.startup_role = bootstrap(self.node, execute_fn=state_machine, peers=peers)
         self.requester = None
 
     def start(self):
