@@ -4,7 +4,7 @@ communicating between actual servers on a real network, with no changes to the o
 Testing and debugging can take place using the simulated network, with production use of the library operating over real network hardware.
 """
 
-from typing import Dict, Optional, List, Callable
+from typing import Dict, Optional, List, Callable, Union
 import random
 import heapq
 from functools import partial
@@ -54,7 +54,7 @@ class Network:
     def stop(self):
         self.timers = []
 
-    def set_timer(self, address, seconds: int, callback: Callable) -> Timer:
+    def set_timer(self, address, seconds: Union[int, float], callback: Callable) -> Timer:
         timer = Timer(self.now + seconds, address, callback)
         heapq.heappush(self.timers, timer)
         return timer
