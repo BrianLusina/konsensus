@@ -1,4 +1,4 @@
-from typing import List, Dict
+from typing import List, Dict, Tuple
 from . import Role
 from ..node import Node
 from konsensus.entities.data_types import Ballot, Proposal
@@ -17,26 +17,26 @@ class Scout(Role):
     def __init__(self, node: Node, ballot_num: Ballot, peers: List) -> None:
         super().__init__(node)
         self.ballot_num = ballot_num
-        self.accepted_proposals: Dict[int, Proposal] = {}
+        self.accepted_proposals: Dict[int, Tuple[Ballot, Proposal]] = {}
         self.acceptors = set([])
         self.peers = peers
         self.quorum = len(peers) / 2 + 1
         self.retransmit_timer = None
-    
+
     def start(self):
         self.logger.info("scout starting")
         self.send_prepare()
-    
+
     def send_prepare(self):
         self.node.send(self.peers, Prepare(ballot_num=self.ballot_num))
         self.retransmit_timer = self.set_timer(PREPARE_RETRANSMIT, self.send_prepare)
-    
-    def update_accepted(self, accepted_proposals: Dict[int, Proposal]):
+
+    def update_accepted(self, accepted_proposals: Dict[int, Tuple[Ballot, Proposal]]):
         acc = self.accepted_proposals
         for slot, (ballot_num, proposal) in accepted_proposals.items():
             if slot not in acc or acc[slot][0] < ballot_num:
                 acc[slot] = (ballot_num, proposal)
-    
+
     def do_promise(self, sender, ballot_num: Ballot, accepted_proposals: Dict[int, Proposal]):
         if ballot_num == self.ballot_num:
             self.logger.info(f"got matching promise; need {self.quorum}")
@@ -47,9 +47,10 @@ class Scout(Role):
                 accepted_proposals = dict((s, p) for s, (b, p) in self.accepted_proposals.items())
                 # We're adopted; note that this does not mean that no other leader is active. Any such 
                 # conflicts will be handled by the commanders
-                self.node.send([self.node.address], Adopted(ballot_num=ballot_num, accepted_proposals=accepted_proposals))
+                self.node.send([self.node.address],
+                               Adopted(ballot_num=ballot_num, accepted_proposals=accepted_proposals))
                 self.stop()
-    
+
         else:
             # this acceptor has promised another leader a higher ballot number, so we have lost
             self.node.send([self.node.address], Preempted(slot=None, preempted_by=ballot_num))
