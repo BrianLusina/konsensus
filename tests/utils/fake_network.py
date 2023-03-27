@@ -40,8 +40,8 @@ class FakeNetwork(Network):
 class FakeNode(Node):
 
     def __init__(self, network: Optional[FakeNetwork] = FakeNetwork()):
-        network = network
-        super(FakeNode, self).__init__(network, 'F999')
+        network = network or FakeNetwork()
+        super(FakeNode, self).__init__(network, "F999")
         self.unique_id = 999
         self.sent = []
         self.logger = logging.getLogger('node.%s' % (self.address,))
