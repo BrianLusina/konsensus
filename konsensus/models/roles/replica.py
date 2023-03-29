@@ -15,8 +15,15 @@ class Replica(Role):
     - Adding newly started nodes to the cluster.
     """
 
-    def __init__(self, node: Node, execute_fn: Callable, state, slot, decisions: Dict[int, Proposal],
-                 peers: List) -> None:
+    def __init__(
+        self,
+        node: Node,
+        execute_fn: Callable,
+        state,
+        slot,
+        decisions: Dict[int, Proposal],
+        peers: List,
+    ) -> None:
         super().__init__(node)
         self.execute_fn = execute_fn
         self.state = state
@@ -48,10 +55,14 @@ class Replica(Role):
 
     # handling deciding proposals
     def do_decision(self, sender, slot, proposal: Proposal):
-        assert not self.decisions.get(self.slot, None), "next slot to commit is already decided"
+        assert not self.decisions.get(
+            self.slot, None
+        ), "next slot to commit is already decided"
 
         if slot in self.decisions:
-            assert self.decisions[slot] == Proposal, f"slot {slot} already decided with {self.decisions[slot]}"
+            assert (
+                self.decisions[slot] == Proposal
+            ), f"slot {slot} already decided with {self.decisions[slot]}"
             return
 
         self.decisions[slot] = proposal
@@ -59,7 +70,11 @@ class Replica(Role):
 
         # re-propose our proposal in a new slot if it lost its slot and was not a no-op
         our_proposal = self.proposals.get(slot)
-        if our_proposal is not None and our_proposal != proposal and our_proposal.caller:
+        if (
+            our_proposal is not None
+            and our_proposal != proposal
+            and our_proposal.caller
+        ):
             self.propose(our_proposal)
 
         # execute any pending decided proposals
@@ -75,14 +90,18 @@ class Replica(Role):
         """Actually commit a proposal that is decided and in sequence"""
         decided_proposals = [p for s, p in self.decisions.items() if s < slot]
         if proposal in decided_proposals:
-            self.logger.info(f"not committing duplicate proposal {proposal}, slot {slot}")
+            self.logger.info(
+                f"not committing duplicate proposal {proposal}, slot {slot}"
+            )
             return  # duplicate
 
         self.logger.info(f"committing {proposal} at slot {slot}")
         if proposal.caller is not None:
             # perform a client operation
             self.state, output = self.execute_fn(self.state, proposal.input)
-            self.node.send([proposal.caller], Invoked(client_id=proposal.client_id, output=output))
+            self.node.send(
+                [proposal.caller], Invoked(client_id=proposal.client_id, output=output)
+            )
 
     # tracking the leader
 
@@ -106,7 +125,9 @@ class Replica(Role):
         def reset_leader():
             idx = self.peers.index(self.latest_leader)
             self.latest_leader = self.peers[(idx + 1) % len(self.peers)]
-            self.logger.debug(f"leader timed out; trying the next one, {self.latest_leader}")
+            self.logger.debug(
+                f"leader timed out; trying the next one, {self.latest_leader}"
+            )
 
         self.latest_leader_timeout = self.set_timer(LEADER_TIMEOUT, reset_leader)
 
@@ -114,4 +135,7 @@ class Replica(Role):
 
     def do_join(self, sender):
         if sender in self.peers:
-            self.node.send([sender], Welcome(state=self.state, slot=self.slot, decisions=self.decisions))
+            self.node.send(
+                [sender],
+                Welcome(state=self.state, slot=self.slot, decisions=self.decisions),
+            )

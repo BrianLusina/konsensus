@@ -16,15 +16,16 @@ from .models.timer import Timer
 class Network:
     """
     The Network class provides a simple simulated network with these capabilities and also simulates packet loss and message propagation delays.
-    
-    Timers are handled using Python's heapq module, allowing efficient selection of the next event. Setting a timer involves pushing a Timer object onto the heap. 
+
+    Timers are handled using Python's heapq module, allowing efficient selection of the next event. Setting a timer involves pushing a Timer object onto the heap.
     Since removing items from a heap is inefficient, cancelled timers are left in place but marked as cancelled.
-    
-    Message transmission uses the timer functionality to schedule a later delivery of the message at each node, using a random simulated delay. 
+
+    Message transmission uses the timer functionality to schedule a later delivery of the message at each node, using a random simulated delay.
     We again use functools.partial to set up a future call to the destination node's receive method with appropriate arguments.
-    
-    Running the simulation just involves popping timers from the heap and executing them if they have not been cancelled and if the destination node is still active.    
+
+    Running the simulation just involves popping timers from the heap and executing them if they have not been cancelled and if the destination node is still active.
     """
+
     PROP_DELAY = 0.03
     PROP_JITTER = 0.02
     DROP_PROB = 0.05
@@ -54,7 +55,9 @@ class Network:
     def stop(self):
         self.timers = []
 
-    def set_timer(self, address, seconds: Union[int, float], callback: Callable) -> Timer:
+    def set_timer(
+        self, address, seconds: Union[int, float], callback: Callable
+    ) -> Timer:
         timer = Timer(self.now + seconds, address, callback)
         heapq.heappush(self.timers, timer)
         return timer
@@ -66,10 +69,18 @@ class Network:
         def sendto(dest, message):
             if dest == sender.address:
                 # reliably deliver local messages with no delay
-                self.set_timer(sender.address, 0, lambda: sender.receive(sender.address, message))
+                self.set_timer(
+                    sender.address, 0, lambda: sender.receive(sender.address, message)
+                )
             elif self.rnd.uniform(0, 1.0) > self.DROP_PROB:
-                delay = self.PROP_DELAY + self.rnd.uniform(-self.PROP_JITTER, self.PROP_JITTER)
-                self.set_timer(dest, delay, partial(self.nodes[dest].receive, sender.address, message))
+                delay = self.PROP_DELAY + self.rnd.uniform(
+                    -self.PROP_JITTER, self.PROP_JITTER
+                )
+                self.set_timer(
+                    dest,
+                    delay,
+                    partial(self.nodes[dest].receive, sender.address, message),
+                )
 
         for dest in (d for d in destinations if d in self.nodes):
             sendto(dest, deepcopy(message))

@@ -10,14 +10,16 @@ from konsensus.constants import LEADER_TIMEOUT
 
 class Leader(Role):
     """
-    The leader's primary task is to take Propose messages requesting new ballots and produce decisions. 
-    A leader is "active" when it has successfully carried out the Prepare/Promise portion of the protocol. 
+    The leader's primary task is to take Propose messages requesting new ballots and produce decisions.
+    A leader is "active" when it has successfully carried out the Prepare/Promise portion of the protocol.
     An active leader can immediately send an Accept message in response to a Propose.
 
     In keeping with the class-per-role model, the leader delegates to the scout and commander roles to carry out each portion of the protocol.
     """
 
-    def __init__(self, node: Node, peers: List, commander=Commander, scout=Scout) -> None:
+    def __init__(
+        self, node: Node, peers: List, commander=Commander, scout=Scout
+    ) -> None:
         super().__init__(node)
         self.ballot_num = Ballot(0, node.address)
         self.active = False
@@ -41,7 +43,9 @@ class Leader(Role):
         self.scouting = True
         self.scout(self.node, self.ballot_num, self.peers).start()
 
-    def do_adopted(self, sender, ballot_num: Ballot, accepted_proposals: Dict[int, Proposal]):
+    def do_adopted(
+        self, sender, ballot_num: Ballot, accepted_proposals: Dict[int, Proposal]
+    ):
         self.scouting = False
         self.proposals.update(accepted_proposals)
         # note that we don't re-spawn commanders here; if there are undecided proposals, the replicas will re-propose
@@ -57,7 +61,9 @@ class Leader(Role):
             self.scouting = False
         self.logger.info(f"leader preempted by {preempted_by.leader}")
         self.active = False
-        self.ballot_num = Ballot((preempted_by or self.ballot_num).n + 1, self.ballot_num.leader)
+        self.ballot_num = Ballot(
+            (preempted_by or self.ballot_num).n + 1, self.ballot_num.leader
+        )
 
     def do_propose(self, sender, slot: int, proposal: Proposal):
         if slot not in self.proposals:

@@ -37,21 +37,31 @@ class Scout(Role):
             if slot not in acc or acc[slot][0] < ballot_num:
                 acc[slot] = (ballot_num, proposal)
 
-    def do_promise(self, sender, ballot_num: Ballot, accepted_proposals: Dict[int, Proposal]):
+    def do_promise(
+        self, sender, ballot_num: Ballot, accepted_proposals: Dict[int, Proposal]
+    ):
         if ballot_num == self.ballot_num:
             self.logger.info(f"got matching promise; need {self.quorum}")
             self.update_accepted(accepted_proposals)
             self.acceptors.add(sender)
             if len(self.acceptors) >= self.quorum:
                 # strip ballot numbers from self.accepted_proposals, now that it represents a majority
-                accepted_proposals = dict((s, p) for s, (b, p) in self.accepted_proposals.items())
-                # We're adopted; note that this does not mean that no other leader is active. Any such 
+                accepted_proposals = dict(
+                    (s, p) for s, (b, p) in self.accepted_proposals.items()
+                )
+                # We're adopted; note that this does not mean that no other leader is active. Any such
                 # conflicts will be handled by the commanders
-                self.node.send([self.node.address],
-                               Adopted(ballot_num=ballot_num, accepted_proposals=accepted_proposals))
+                self.node.send(
+                    [self.node.address],
+                    Adopted(
+                        ballot_num=ballot_num, accepted_proposals=accepted_proposals
+                    ),
+                )
                 self.stop()
 
         else:
             # this acceptor has promised another leader a higher ballot number, so we have lost
-            self.node.send([self.node.address], Preempted(slot=None, preempted_by=ballot_num))
+            self.node.send(
+                [self.node.address], Preempted(slot=None, preempted_by=ballot_num)
+            )
             self.stop()

@@ -8,7 +8,7 @@ from konsensus.constants import INVOKE_RETRANSMIT
 
 class Requester(Role):
     """
-    The requester role manages a request to the distributed state machine. 
+    The requester role manages a request to the distributed state machine.
     The role class simply sends Invoke messages to the local replica until it receives a corresponding Invoked.
     """
 
@@ -22,8 +22,12 @@ class Requester(Role):
         self.callback = callback
 
     def start(self):
-        self.node.send([self.node.address], Invoke(
-            caller=self.node.address, client_id=self.client_id, input_value=self.n))
+        self.node.send(
+            [self.node.address],
+            Invoke(
+                caller=self.node.address, client_id=self.client_id, input_value=self.n
+            ),
+        )
         self.invoke_timer = self.set_timer(INVOKE_RETRANSMIT, self.start)
 
     def do_invoked(self, sender, client_id, output):

@@ -18,20 +18,25 @@ class Acceptor(Role):
         self.ballot_num = NULL_BALLOT
         # {slot: (ballot_num, proposal)}
         self.accepted_proposals = {}
-    
+
     def do_prepare(self, sender, ballot_num: NULL_BALLOT):
         if ballot_num > self.ballot_num:
             self.ballot_num = ballot_num
             # We have heard from a scout, so it might be the next leader
             self.node.send([self.node.address], Accepting(leader=sender))
-        
-        self.node.send([sender], Promise(ballot_num=self.ballot_num, accepted_proposals=self.accepted_proposals))
-    
+
+        self.node.send(
+            [sender],
+            Promise(
+                ballot_num=self.ballot_num, accepted_proposals=self.accepted_proposals
+            ),
+        )
+
     def do_accept(self, sender, ballot_num, slot, proposal):
         if ballot_num >= self.ballot_num:
             self.ballot_num = ballot_num
             acc = self.accepted_proposals
             if slot not in acc or acc[slot][0] < ballot_num:
                 acc[slot] = (ballot_num, proposal)
-            
+
         self.node.send([sender], Accepted(slot=slot, ballot_num=self.ballot_num))
