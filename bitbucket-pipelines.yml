@@ -1,0 +1,86 @@
+# ref https://support.atlassian.com/bitbucket-cloud/docs/configure-bitbucket-pipelinesyml/
+image: python:3.10.4
+
+definitions:
+  caches:
+    venv: .venv
+
+pipelines:
+  default:
+    - step:
+        caches:
+          - venv
+        script:
+          - export POETRY_HOME=/opt/poetry
+          - python3 -m venv $POETRY_HOME
+          - make install
+
+    - step:
+        name: Lint
+        script:
+          - pip install black
+          - make lint
+
+    - step:
+        name: Tests
+        script:
+          - pip install pytest
+          - pip install pytest-cov
+          - make test
+
+    - step:
+        name: Build
+        script:
+          - pip install poetry
+          - make build
+        artifacts:
+          - tictacai/dist/*.tar.gz
+          - tictacai/dist/*.whl
+
+    - parallel:
+        - step:
+            name: Package
+            script:
+              - pipe: atlassian/bitbucket-upload-file:0.3.4
+                variables:
+                  BITBUCKET_USERNAME: $BITBUCKET_USERNAME
+                  BITBUCKET_APP_PASSWORD: $BITBUCKET_APP_PASSWORD
+                  FILENAME: "tictacai/dist/*.tar.gz"
+
+        - step:
+            name: Package Wheel
+            script:
+              - pipe: atlassian/bitbucket-upload-file:0.3.4
+                variables:
+                  BITBUCKET_USERNAME: $BITBUCKET_USERNAME
+                  BITBUCKET_APP_PASSWORD: $BITBUCKET_APP_PASSWORD
+                  FILENAME: "tictacai/dist/*.whl"
+
+  pull-requests:
+    '**':
+      - step:
+          caches:
+            - venv
+
+          script:
+            - export POETRY_HOME=/opt/poetry
+            - python3 -m venv $POETRY_HOME
+            - make install
+
+      - step:
+          name: Lint
+          script:
+            - pip install black
+            - make lint
+
+      - step:
+          name: Tests
+          script:
+            - pip install pytest
+            - pip install pytest-cov
+            - make test
+
+      - step:
+          name: Build
+          script:
+            - make build
