@@ -2,9 +2,9 @@
 install:
 	pipenv install
 
-# Runs application
+# Runs sample script
 run:
-	python asgi_server.py
+	python run.py 10
 
 # Runs tests
 test:
@@ -14,8 +14,14 @@ test:
 test-cover:
 	pytest --cov=konsensus tests/
 
+precommit:
+	pre-commit run --verbose --all-files --show-diff-on-failure
+
 format:
 	black konsensus
 
 lint:
 	pylint konsensus
+
+build:
+	poetry build
