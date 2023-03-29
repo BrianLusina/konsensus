@@ -8,7 +8,7 @@ on:
     workflows:
       - "Lint"
       - "Test"
-      - "Docker"
+      - "Build"
       - "Release"
     types:
       - completed

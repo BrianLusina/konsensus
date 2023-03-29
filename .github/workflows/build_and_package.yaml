@@ -1,14 +1,14 @@
-name: Tests
+name: Build
 
 on:
   workflow_run:
     workflows:
-      - "Lint"
+      - "Tests"
     types:
       - completed
 
 jobs:
-  unittests:
+  build:
     name: Unit Tests on ${{ matrix.python-version }}
     if: ${{ github.event.workflow_run.conclusion == 'success' }}
 
@@ -28,19 +28,16 @@ jobs:
         with:
           python-version: ${{ matrix.python-version }}
 
-      - name: Restore Cache
-        id: cache
-        uses: actions/cache@v2
-        with:
-          path: |
-            ~/.venv
-          key: ${{ runner.os }}-pyproject-${{ hashFiles('pyproject.toml') }}
-
-      - name: Install Dependencies
-        if: steps.cache.outputs.cache-hit != 'true'
+      - name: Install latest pip, build, twine
         run: |
+          python -m pip install --upgrade --disable-pip-version-check pip
+          python -m pip install --upgrade build twine
           pip install poetry
-          poetry install          
 
-      - name: Run Tests with coverage
-        run: make test-cover
+      - name: Run Build
+        run: make build
+
+      - name: Upload to PyPI via Twine
+        env:
+          TWINE_PASSWORD: ${{ secrets.PYPI_TOKEN }}
+        run: twine upload --verbose -u '__token__' dist/*
