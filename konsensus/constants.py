@@ -1,3 +1,6 @@
+"""
+Constants
+"""
 from .entities.data_types import Ballot, Proposal
 
 

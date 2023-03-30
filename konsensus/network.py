@@ -1,7 +1,8 @@
 """
-While it's not included in this implementation, the component model allows us to swap in a real-world network implementation, 
-communicating between actual servers on a real network, with no changes to the other components. 
-Testing and debugging can take place using the simulated network, with production use of the library operating over real network hardware.
+While it's not included in this implementation, the component model allows us to swap in a real-world network
+implementation, communicating between actual servers on a real network, with no changes to the other components.
+Testing and debugging can take place using the simulated network, with production use of the library operating over
+real network hardware.
 """
 
 from typing import Dict, Optional, List, Callable, Union
@@ -15,15 +16,20 @@ from .models.timer import Timer
 
 class Network:
     """
-    The Network class provides a simple simulated network with these capabilities and also simulates packet loss and message propagation delays.
+    The Network class provides a simple simulated network with these capabilities and also simulates packet loss and
+    message propagation delays.
 
-    Timers are handled using Python's heapq module, allowing efficient selection of the next event. Setting a timer involves pushing a Timer object onto the heap.
+    Timers are handled using Python's heapq module, allowing efficient selection of the next event. Setting a timer
+    involves pushing a Timer object onto the heap.
     Since removing items from a heap is inefficient, cancelled timers are left in place but marked as cancelled.
 
-    Message transmission uses the timer functionality to schedule a later delivery of the message at each node, using a random simulated delay.
-    We again use functools.partial to set up a future call to the destination node's receive method with appropriate arguments.
+    Message transmission uses the timer functionality to schedule a later delivery of the message at each node, using
+    a random simulated delay.
+    We again use functools.partial to set up a future call to the destination node's receive method with appropriate
+    arguments.
 
-    Running the simulation just involves popping timers from the heap and executing them if they have not been cancelled and if the destination node is still active.
+    Running the simulation just involves popping timers from the heap and executing them if they have not been cancelled
+    and if the destination node is still active.
     """
 
     PROP_DELAY = 0.03
@@ -56,7 +62,7 @@ class Network:
         self.timers = []
 
     def set_timer(
-        self, address, seconds: Union[int, float], callback: Callable
+            self, address, seconds: Union[int, float], callback: Callable
     ) -> Timer:
         timer = Timer(self.now + seconds, address, callback)
         heapq.heappush(self.timers, timer)

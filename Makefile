@@ -1,6 +1,6 @@
 # Installs dependencies
 install:
-	pipenv install
+	poetry install
 
 # Runs sample script
 run:
