@@ -1,6 +1,8 @@
 name: Lint
 
-on: [ push ]
+on:
+  - push
+  - pull_request
 
 permissions:
   contents: read
@@ -9,7 +11,7 @@ permissions:
 jobs:
   setup:
     name: Setup
-    uses: ./.github/workflows/base_setup_workflow.yml
+    uses: ./.github/workflows/base_setup_workflow.yaml
 
   lint:
     runs-on: ubuntu-latest
