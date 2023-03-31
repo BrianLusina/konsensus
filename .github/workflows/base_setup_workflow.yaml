@@ -1,0 +1,37 @@
+name: Base Setup Workflow
+
+on:
+  workflow_call:
+
+jobs:
+  reuse:
+    runs-on: ubuntu-latest
+    strategy:
+      max-parallel: 4
+      matrix:
+        python-version: [ '3.10' ]
+
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v3
+
+      - name: Install Poetry
+        run: pipx install poetry
+
+      - name: Set up Python ${{ matrix.python-version }}
+        uses: actions/setup-python@v4
+        with:
+          python-version: ${{ matrix.python-version }}
+          cache: 'poetry'
+
+      - name: Restore Cache
+        id: cache
+        uses: actions/cache@v2
+        with:
+          path: |
+            ~/.venv
+          key: ${{ runner.os }}-pyproject-${{ hashFiles('pyproject.toml') }}
+
+      - name: Install Dependencies
+        if: steps.cache.outputs.cache-hit != 'true'
+        run: poetry install

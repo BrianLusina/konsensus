@@ -9,34 +9,8 @@ permissions:
 jobs:
   lint:
     name: Lint
-    runs-on: ubuntu-latest
-    strategy:
-      max-parallel: 4
-      matrix:
-        python-version: [ '3.10' ]
+    uses: ./.github/workflows/base_setup_workflow.yml
 
     steps:
-      - name: Checkout
-        uses: actions/checkout@v3
-
-      - name: Set up Python ${{ matrix.python-version }}
-        uses: actions/setup-python@v3
-        with:
-          python-version: ${{ matrix.python-version }}
-
-      - name: Restore Cache
-        id: cache
-        uses: actions/cache@v2
-        with:
-          path: |
-            ~/.venv
-          key: ${{ runner.os }}-pyproject-${{ hashFiles('pyproject.toml') }}
-
-      - name: Install Dependencies
-        if: steps.cache.outputs.cache-hit != 'true'
-        run: |
-          pip install poetry
-          poetry install
-
       - name: Run Linting
         run: make lint
