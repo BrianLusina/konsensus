@@ -1,11 +1,14 @@
+"""
+Leader Role
+"""
 from typing import Dict, List
+from konsensus.entities.data_types import Ballot, Proposal
+from konsensus.entities.messages_types import Active
+from konsensus.constants import LEADER_TIMEOUT
 from . import Role
 from .commander import Commander
 from .scout import Scout
 from ..node import Node
-from konsensus.entities.data_types import Ballot, Proposal
-from konsensus.entities.messages_types import Active
-from konsensus.constants import LEADER_TIMEOUT
 
 
 class Leader(Role):
@@ -14,12 +17,16 @@ class Leader(Role):
     A leader is "active" when it has successfully carried out the Prepare/Promise portion of the protocol.
     An active leader can immediately send an Accept message in response to a Propose.
 
-    In keeping with the class-per-role model, the leader delegates to the scout and commander roles to carry out each portion of the protocol.
+    In keeping with the class-per-role model, the leader delegates to the scout and commander roles to carry out each
+    portion of the protocol.
     """
 
     def __init__(
-        self, node: Node, peers: List, commander=Commander, scout=Scout
+            self, node: Node, peers: List, commander=Commander, scout=Scout
     ) -> None:
+        """
+        Creates a new Leader Role instance
+        """
         super().__init__(node)
         self.ballot_num = Ballot(0, node.address)
         self.active = False
@@ -30,8 +37,15 @@ class Leader(Role):
         self.peers = peers
 
     def start(self):
+        """
+        Starts the leader role
+        """
+
         # remind others we are active before LEADER_TIMEOUT expires
         def active():
+            """
+            Sets a timeout and sends out an Active message
+            """
             if self.active:
                 self.node.send(self.peers, Active())
             self.set_timer(LEADER_TIMEOUT / 2.0, active)
@@ -39,13 +53,19 @@ class Leader(Role):
         active()
 
     def spawn_scout(self):
+        """
+        Spawns a new scout if not scouting
+        """
         assert not self.scouting
         self.scouting = True
         self.scout(self.node, self.ballot_num, self.peers).start()
 
     def do_adopted(
-        self, sender, ballot_num: Ballot, accepted_proposals: Dict[int, Proposal]
+            self, sender, ballot_num: Ballot, accepted_proposals: Dict[int, Proposal]
     ):
+        """
+        Performs an Adopted action
+        """
         self.scouting = False
         self.proposals.update(accepted_proposals)
         # note that we don't re-spawn commanders here; if there are undecided proposals, the replicas will re-propose
@@ -53,10 +73,16 @@ class Leader(Role):
         self.active = True
 
     def spawn_commander(self, ballot_num: Ballot, slot: int):
+        """
+        Spawn a new commander
+        """
         proposal = self.proposals[slot]
         self.commander(self.node, ballot_num, slot, proposal, self.peers).start()
 
     def do_preempted(self, sender, slot, preempted_by):
+        """
+        Performs a Pre-empted command
+        """
         if not slot:  # from the scout
             self.scouting = False
         self.logger.info(f"leader preempted by {preempted_by.leader}")
@@ -66,6 +92,9 @@ class Leader(Role):
         )
 
     def do_propose(self, sender, slot: int, proposal: Proposal):
+        """
+        Sends a proposal
+        """
         if slot not in self.proposals:
             if self.active:
                 self.proposals[slot] = proposal
