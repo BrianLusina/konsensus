@@ -1,9 +1,9 @@
-name: Tests
+name: Publish
 
 on:
   workflow_run:
     workflows:
-      - "Lint"
+      - "Build"
     types:
       - completed
 
@@ -12,8 +12,11 @@ permissions:
   pull-requests: read
 
 jobs:
-  unittests:
+  publish:
+    name: Publish
     if: ${{ github.event.workflow_run.conclusion == 'success' }}
     uses: ./.github/workflows/base_ci_workflow.yaml
     with:
-      command: test
+      command: publish
+    secrets:
+      pypi_token: ${{ secrets.PYPI_TOKEN }}
