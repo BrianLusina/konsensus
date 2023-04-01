@@ -9,14 +9,8 @@ permissions:
   pull-requests: read
 
 jobs:
-  setup:
-    name: Setup
-    uses: ./.github/workflows/base_setup_workflow.yaml
-
   lint:
-    runs-on: ubuntu-latest
-    needs:
-      - setup
-    steps:
-      - name: Run Linting
-        run: make lint
+    name: Lint
+    uses: ./.github/workflows/base_ci_workflow.yaml
+    with:
+      command: lint

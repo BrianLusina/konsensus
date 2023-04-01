@@ -2,12 +2,15 @@ name: Base Setup Workflow
 
 on:
   workflow_call:
+    inputs:
+      command:
+        required: true
+        type: string
 
 jobs:
-  reuse:
+  command:
     runs-on: ubuntu-latest
     strategy:
-      max-parallel: 4
       matrix:
         python-version: [ '3.10' ]
 
@@ -35,3 +38,6 @@ jobs:
       - name: Install Dependencies
         if: steps.cache.outputs.cache-hit != 'true'
         run: poetry install
+
+      - name: Run ${{ inputs.command }}
+        run: make ${{ inputs.command }}
