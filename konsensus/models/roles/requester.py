@@ -1,7 +1,7 @@
 """
 Requester role
 """
-from typing import Callable
+from typing import Callable, Optional
 from itertools import count
 # pylint: disable-next=relative-beyond-top-level)
 from ...entities.messages_types import Invoke
@@ -23,7 +23,7 @@ class Requester(Role):
     # pylint: disable-next=missing-function-docstring
     def __init__(self, node: Node, n, callback: Callable) -> None:
         super().__init__(node)
-        self.invoke_timer: Timer = None
+        self.invoke_timer: Optional[Timer] = None
         self.client_id = next(self.client_ids)
         # pylint: disable-next=invalid-name
         self.n = n
