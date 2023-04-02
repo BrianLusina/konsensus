@@ -1,11 +1,20 @@
+"""
+SimTimeLogger is an implementation of the LoggerAdapter
+"""
 import logging
 
 
 class SimTimeLogger(logging.LoggerAdapter):
-    def process(self, msg, kwargs):
-        return "T=%.3f %s" % (self.extra["network"].now, msg), kwargs
+    """
+    SimTimeLogger is a LoggerAdapter
+    """
 
-    def getChild(self, name):
+    # pylint: disable-next=missing-function-docstring
+    def process(self, msg, kwargs):
+        return f"T={self.extra['network'].now} {msg}", kwargs
+
+    # pylint: disable-next=missing-function-docstring
+    def get_child(self, name):
         return self.__class__(
             self.logger.getChild(name), {"network": self.extra["network"]}
         )

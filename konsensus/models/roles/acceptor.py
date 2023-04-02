@@ -1,7 +1,12 @@
+"""
+Acceptor Role
+"""
 from . import Role
+# pylint: disable-next=relative-beyond-top-level
+from ...entities.messages_types import Accepting, Promise, Accepted
 from ..node import Node
+# pylint: disable-next=relative-beyond-top-level
 from ...constants import NULL_BALLOT
-from konsensus.entities.messages_types import Accepting, Promise, Accepted
 
 
 class Acceptor(Role):
@@ -13,12 +18,14 @@ class Acceptor(Role):
     This looks like a Simple Paxos with the addition of slot numbers to the messages
     """
 
+    # pylint: disable-next=missing-function-docstring
     def __init__(self, node: Node):
         super().__init__(node)
         self.ballot_num = NULL_BALLOT
         # {slot: (ballot_num, proposal)}
         self.accepted_proposals = {}
 
+    # pylint: disable-next=missing-function-docstring
     def do_prepare(self, sender, ballot_num: NULL_BALLOT):
         if ballot_num > self.ballot_num:
             self.ballot_num = ballot_num
@@ -32,6 +39,7 @@ class Acceptor(Role):
             ),
         )
 
+    # pylint: disable-next=missing-function-docstring
     def do_accept(self, sender, ballot_num, slot, proposal):
         if ballot_num >= self.ballot_num:
             self.ballot_num = ballot_num

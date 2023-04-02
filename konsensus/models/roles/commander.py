@@ -1,8 +1,11 @@
+"""
+Commander Role
+"""
+from typing import List
+from math import floor
 from konsensus.entities.data_types import Ballot, Proposal
 from konsensus.entities.messages_types import Preempted, Accept, Decided, Decision
 from konsensus.constants import ACCEPT_RETRANSMIT
-from typing import List
-from math import floor
 from . import Role
 from ..node import Node
 
@@ -15,9 +18,13 @@ class Commander(Role):
     Decision message to all nodes. It responds to the leader with Decided or Preempted
     """
 
+    # pylint: disable-next=too-many-arguments
     def __init__(
-        self, node: Node, ballot_num: Ballot, slot: int, proposal: Proposal, peers: List
+            self, node: Node, ballot_num: Ballot, slot: int, proposal: Proposal, peers: List
     ) -> None:
+        """
+        Creates an instance of the Commander Role
+        """
         super().__init__(node)
         self.ballot_num = ballot_num
         self.slot = slot
@@ -27,6 +34,9 @@ class Commander(Role):
         self.quorum = floor(len(peers) / 2 + 1)
 
     def start(self):
+        """
+        Starts the Commander role
+        """
         self.node.send(
             set(self.peers) - self.acceptors,
             Accept(slot=self.slot, ballot_num=self.ballot_num, proposal=self.proposal),
@@ -34,6 +44,9 @@ class Commander(Role):
         self.set_timer(ACCEPT_RETRANSMIT, self.start)
 
     def finished(self, ballot_num: Ballot, preempted: bool):
+        """
+        Handles finished process and stops the node before unregistering it
+        """
         if preempted:
             self.node.send(
                 [self.node.address], Preempted(slot=self.slot, preempted_by=ballot_num)
@@ -43,6 +56,9 @@ class Commander(Role):
         self.stop()
 
     def do_accepted(self, sender, slot: int, ballot_num: Ballot):
+        """
+        Handles Accepted message types.
+        """
         if slot != self.slot:
             return
         if ballot_num == self.ballot_num:

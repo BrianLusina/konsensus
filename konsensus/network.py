@@ -36,17 +36,20 @@ class Network:
     PROP_JITTER = 0.02
     DROP_PROB = 0.05
 
+    # pylint: disable=missing-function-docstring
     def __init__(self, seed) -> None:
         self.nodes: Dict[str, Node] = {}
         self.rnd = random.Random(seed)
         self.timers: List[Timer] = []
         self.now = 1000.0
 
+    # pylint: disable=missing-function-docstring
     def new_node(self, address: Optional[str] = None) -> Node:
         node = Node(self, address=address)
         self.nodes[node.address] = node
         return node
 
+    # pylint: disable=missing-function-docstring
     def run(self):
         while self.timers:
             next_timer = self.timers[0]
@@ -58,16 +61,19 @@ class Network:
             if not next_timer.address or next_timer.address in self.nodes:
                 next_timer.callback()
 
+    # pylint: disable=missing-function-docstring
     def stop(self):
         self.timers = []
 
+    # pylint: disable=missing-function-docstring
     def set_timer(
-        self, address, seconds: Union[int, float], callback: Callable
+            self, address, seconds: Union[int, float], callback: Callable
     ) -> Timer:
         timer = Timer(self.now + seconds, address, callback)
         heapq.heappush(self.timers, timer)
         return timer
 
+    # pylint: disable=missing-function-docstring
     def send(self, sender, destinations, message):
         sender.logger.debug(f"sending {message} to {destinations}")
 

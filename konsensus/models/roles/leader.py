@@ -69,7 +69,7 @@ class Leader(Role):
         self.scouting = False
         self.proposals.update(accepted_proposals)
         # note that we don't re-spawn commanders here; if there are undecided proposals, the replicas will re-propose
-        self.logger.info("leader becoming active")
+        self.logger.info(f"leader becoming active. Sender: {sender}. Ballot: {ballot_num}")
         self.active = True
 
     def spawn_commander(self, ballot_num: Ballot, slot: int):
@@ -85,7 +85,7 @@ class Leader(Role):
         """
         if not slot:  # from the scout
             self.scouting = False
-        self.logger.info(f"leader preempted by {preempted_by.leader}")
+        self.logger.info(f"leader preempted by {preempted_by.leader}. Sender: {sender}")
         self.active = False
         self.ballot_num = Ballot(
             (preempted_by or self.ballot_num).n + 1, self.ballot_num.leader
@@ -98,13 +98,13 @@ class Leader(Role):
         if slot not in self.proposals:
             if self.active:
                 self.proposals[slot] = proposal
-                self.logger.info(f"spawning commander for slot {slot}")
+                self.logger.info(f"spawning commander for slot {slot} from {sender}")
                 self.spawn_commander(self.ballot_num, slot)
             else:
                 if not self.scouting:
-                    self.logger.info("got PROPOSE when not active - scouting")
+                    self.logger.info(f"got PROPOSE from {sender} when not active - scouting")
                     self.spawn_scout()
                 else:
-                    self.logger.info("got PROPOSE while scouting; ignored")
+                    self.logger.info(f"got PROPOSE from {sender} while scouting; ignored")
         else:
-            self.logger.info("got PROPOSE for a slot already being proposed")
+            self.logger.info(f"got PROPOSE from {sender} for a slot already being proposed")
