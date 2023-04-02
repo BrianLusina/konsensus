@@ -2,9 +2,12 @@
 Replica Role
 """
 from typing import Dict, Callable, List
-from konsensus.entities.data_types import Proposal
-from konsensus.entities.messages_types import Propose, Invoked, Welcome
-from konsensus.constants import LEADER_TIMEOUT
+# pylint: disable-next=relative-beyond-top-level)
+from ...entities.data_types import Proposal
+# pylint: disable-next=relative-beyond-top-level)
+from ...entities.messages_types import Propose, Invoked, Welcome
+# pylint: disable-next=relative-beyond-top-level)
+from ...constants import LEADER_TIMEOUT
 from . import Role
 from ..node import Node
 

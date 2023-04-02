@@ -2,9 +2,12 @@
 Scout Node role
 """
 from typing import List, Dict, Tuple
-from konsensus.entities.data_types import Ballot, Proposal
-from konsensus.entities.messages_types import Prepare, Adopted, Preempted
-from konsensus.constants import PREPARE_RETRANSMIT
+# pylint: disable-next=relative-beyond-top-level)
+from ...entities.data_types import Ballot, Proposal
+# pylint: disable-next=relative-beyond-top-level)
+from ...entities.messages_types import Prepare, Adopted, Preempted
+# pylint: disable-next=relative-beyond-top-level)
+from ...constants import PREPARE_RETRANSMIT
 from . import Role
 from ..node import Node
 

@@ -2,9 +2,12 @@
 Leader Role
 """
 from typing import Dict, List
-from konsensus.entities.data_types import Ballot, Proposal
-from konsensus.entities.messages_types import Active
-from konsensus.constants import LEADER_TIMEOUT
+# pylint: disable-next=relative-beyond-top-level)
+from ...entities.data_types import Ballot, Proposal
+# pylint: disable-next=relative-beyond-top-level)
+from ...entities.messages_types import Active
+# pylint: disable-next=relative-beyond-top-level)
+from ...constants import LEADER_TIMEOUT
 from . import Role
 from .commander import Commander
 from .scout import Scout

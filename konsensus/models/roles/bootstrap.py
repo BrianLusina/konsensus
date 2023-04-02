@@ -3,8 +3,10 @@ Bootstrap role
 """
 from typing import List, Callable
 from itertools import cycle
-from konsensus.entities.messages_types import Join
-from konsensus.constants import JOIN_RETRANSMIT
+# pylint: disable-next=relative-beyond-top-level)
+from ...entities.messages_types import Join
+# pylint: disable-next=relative-beyond-top-level)
+from ...constants import JOIN_RETRANSMIT
 from . import Role
 from .replica import Replica
 from .acceptor import Acceptor

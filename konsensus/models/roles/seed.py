@@ -2,8 +2,10 @@
 Seed Node Role
 """
 from typing import List, Callable
-from konsensus.entities.messages_types import Welcome
-from konsensus.constants import JOIN_RETRANSMIT
+# pylint: disable-next=relative-beyond-top-level)
+from ...entities.messages_types import Welcome
+# pylint: disable-next=relative-beyond-top-level)
+from ...constants import JOIN_RETRANSMIT
 from . import Role
 from ..node import Node
 from .bootstrap import Bootstrap

@@ -3,9 +3,12 @@ Commander Role
 """
 from typing import List
 from math import floor
-from konsensus.entities.data_types import Ballot, Proposal
-from konsensus.entities.messages_types import Preempted, Accept, Decided, Decision
-from konsensus.constants import ACCEPT_RETRANSMIT
+# pylint: disable-next=relative-beyond-top-level)
+from ...entities.data_types import Ballot, Proposal
+# pylint: disable-next=relative-beyond-top-level)
+from ...entities.messages_types import Preempted, Accept, Decided, Decision
+# pylint: disable-next=relative-beyond-top-level)
+from ...constants import ACCEPT_RETRANSMIT
 from . import Role
 from ..node import Node
 

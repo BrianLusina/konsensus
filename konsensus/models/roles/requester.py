@@ -3,8 +3,10 @@ Requester role
 """
 from typing import Callable
 from itertools import count
-from konsensus.entities.messages_types import Invoke
-from konsensus.constants import INVOKE_RETRANSMIT
+# pylint: disable-next=relative-beyond-top-level)
+from ...entities.messages_types import Invoke
+# pylint: disable-next=relative-beyond-top-level)
+from ...constants import INVOKE_RETRANSMIT
 from ..timer import Timer
 from . import Role
 from ..node import Node
