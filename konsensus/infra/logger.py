@@ -13,8 +13,11 @@ class SimTimeLogger(logging.LoggerAdapter):
     def process(self, msg, kwargs):
         return f"T={self.extra['network'].now} {msg}", kwargs
 
-    # pylint: disable-next=missing-function-docstring
-    def get_child(self, name):
+    # pylint: disable-next=invalid-name
+    def getChild(self, name):
+        """
+        Get Child logger
+        """
         return self.__class__(
             self.logger.getChild(name), {"network": self.extra["network"]}
         )

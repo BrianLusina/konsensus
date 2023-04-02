@@ -14,7 +14,7 @@ class Role:
         self.node = node
         self.node.register(self)
         self.running = True
-        self.logger = node.logger.get_child(type(self).__name__)
+        self.logger = node.logger.getChild(type(self).__name__)
 
     # pylint: disable-next=missing-function-docstring)
     def set_timer(self, seconds: int, callback: Callable):
