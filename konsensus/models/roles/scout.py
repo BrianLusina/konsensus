@@ -1,17 +1,23 @@
+"""
+Scout Node role
+"""
 from typing import List, Dict, Tuple
+# pylint: disable-next=relative-beyond-top-level)
+from ...entities.data_types import Ballot, Proposal
+# pylint: disable-next=relative-beyond-top-level)
+from ...entities.messages_types import Prepare, Adopted, Preempted
+# pylint: disable-next=relative-beyond-top-level)
+from ...constants import PREPARE_RETRANSMIT
 from . import Role
 from ..node import Node
-from konsensus.entities.data_types import Ballot, Proposal
-from konsensus.entities.messages_types import Prepare, Adopted, Preempted
-from konsensus.constants import PREPARE_RETRANSMIT
 
 
 class Scout(Role):
     """
-    The leader creates a scout role when it wants to become active, in response to receiving a Propose when it is inactive.
-    The scout sends(and re-sends, if necessary) a Prepare message, and collects Promise responses until it has heard from
-    a majority of its peers or until it has been preempted. It communicates back to the leader with Adopted or Preempted,
-    respectively
+    The leader creates a scout role when it wants to become active, in response to receiving a Propose when it is
+    inactive. The scout sends(and re-sends, if necessary) a Prepare message, and collects Promise responses until it
+    has heard from a majority of its peers or until it has been preempted. It communicates back to the leader with
+    Adopted or Preempted, respectively.
     """
 
     def __init__(self, node: Node, ballot_num: Ballot, peers: List) -> None:
@@ -23,22 +29,26 @@ class Scout(Role):
         self.quorum = len(peers) / 2 + 1
         self.retransmit_timer = None
 
+    # pylint: disable-next=missing-function-docstring
     def start(self):
         self.logger.info("scout starting")
         self.send_prepare()
 
+    # pylint: disable-next=missing-function-docstring
     def send_prepare(self):
         self.node.send(self.peers, Prepare(ballot_num=self.ballot_num))
         self.retransmit_timer = self.set_timer(PREPARE_RETRANSMIT, self.send_prepare)
 
+    # pylint: disable-next=missing-function-docstring
     def update_accepted(self, accepted_proposals: Dict[int, Tuple[Ballot, Proposal]]):
         acc = self.accepted_proposals
         for slot, (ballot_num, proposal) in accepted_proposals.items():
             if slot not in acc or acc[slot][0] < ballot_num:
                 acc[slot] = (ballot_num, proposal)
 
+    # pylint: disable-next=missing-function-docstring
     def do_promise(
-        self, sender, ballot_num: Ballot, accepted_proposals: Dict[int, Proposal]
+            self, sender, ballot_num: Ballot, accepted_proposals: Dict[int, Tuple[Ballot, Proposal]]
     ):
         if ballot_num == self.ballot_num:
             self.logger.info(f"got matching promise; need {self.quorum}")

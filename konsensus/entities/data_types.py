@@ -1,3 +1,6 @@
+"""
+Data Types in the system
+"""
 from collections import namedtuple
 
 

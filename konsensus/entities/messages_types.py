@@ -1,5 +1,7 @@
+"""
+Message Types in the system
+"""
 from collections import namedtuple
-
 
 Accepted = namedtuple("Accepted", ["slot", "ballot_num"])
 Accept = namedtuple("Accept", ["slot", "ballot_num", "proposal"])

@@ -25,3 +25,7 @@ lint:
 
 build:
 	poetry build
+
+publish:
+	poetry build
+	twine upload --verbose -u '__token__' dist/*
