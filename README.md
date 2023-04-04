@@ -1,5 +1,11 @@
 # Konsensus
 
+[![Lint](https://github.com/BrianLusina/konsensus/actions/workflows/lint.yml/badge.svg)](https://github.com/BrianLusina/konsensus/actions/workflows/lint.yml)
+[![Tests](https://github.com/BrianLusina/konsensus/actions/workflows/tests.yaml/badge.svg)](https://github.com/BrianLusina/konsensus/actions/workflows/tests.yaml)
+[![Build](https://github.com/BrianLusina/konsensus/actions/workflows/build.yaml/badge.svg)](https://github.com/BrianLusina/konsensus/actions/workflows/build.yaml)
+[![Publish](https://github.com/BrianLusina/konsensus/actions/workflows/publish.yaml/badge.svg)](https://github.com/BrianLusina/konsensus/actions/workflows/publish.yaml)
+[![CodeQL](https://github.com/BrianLusina/konsensus/actions/workflows/codeql.yaml/badge.svg)](https://github.com/BrianLusina/konsensus/actions/workflows/codeql.yaml)
+
 A simple clustering by consensus library in Python. This is a simple implementation of a replicated state machine
 using a Paxos-derived algorithm.
 

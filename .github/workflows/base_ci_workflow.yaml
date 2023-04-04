@@ -63,13 +63,12 @@ jobs:
 
       - name: Install required dependencies for ${{ inputs.command }}
         if: ${{ inputs.command == 'publish' }}
-        env:
-          TWINE_PASSWORD: ${{ secrets.pypi_token }}
         run: |
           python -m pip install --upgrade --disable-pip-version-check pip
           python -m pip install --upgrade build twine
           pip install poetry
 
       - name: Run ${{ inputs.command }}
-        run: |
-          make ${{ inputs.command }}
+        env:
+          TWINE_PASSWORD: ${{ secrets.pypi_token }}
+        run: make ${{ inputs.command }}
