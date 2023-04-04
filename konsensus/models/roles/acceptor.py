@@ -2,9 +2,11 @@
 Acceptor Role
 """
 from . import Role
+
 # pylint: disable-next=relative-beyond-top-level
 from ...entities.messages_types import Accepting, Promise, Accepted
 from ..node import Node
+
 # pylint: disable-next=relative-beyond-top-level
 from ...constants import NULL_BALLOT
 

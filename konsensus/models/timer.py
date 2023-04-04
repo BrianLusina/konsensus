@@ -10,7 +10,7 @@ class Timer:
     """
 
     def __init__(
-            self, expires: Union[int, float], address: str, callback: Callable
+        self, expires: Union[int, float], address: str, callback: Callable
     ) -> None:
         self.expires = expires
         self.address = address

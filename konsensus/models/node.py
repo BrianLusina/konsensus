@@ -28,7 +28,7 @@ class Node:
     unique_ids = count()
 
     # pylint: disable-next=missing-function-docstring
-    def __init__(self, network: 'Network', address) -> None:
+    def __init__(self, network: "Network", address) -> None:
         self.network = network
         self.address = address or f"N{next(self.unique_ids)}"
         self.logger = SimTimeLogger(

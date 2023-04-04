@@ -3,8 +3,10 @@ Requester role
 """
 from typing import Callable, Optional
 from itertools import count
+
 # pylint: disable-next=relative-beyond-top-level)
 from ...entities.messages_types import Invoke
+
 # pylint: disable-next=relative-beyond-top-level)
 from ...constants import INVOKE_RETRANSMIT
 from ..timer import Timer

@@ -2,10 +2,13 @@
 Leader Role
 """
 from typing import Dict, List
+
 # pylint: disable-next=relative-beyond-top-level)
 from ...entities.data_types import Ballot, Proposal
+
 # pylint: disable-next=relative-beyond-top-level)
 from ...entities.messages_types import Active
+
 # pylint: disable-next=relative-beyond-top-level)
 from ...constants import LEADER_TIMEOUT
 from . import Role
@@ -25,7 +28,7 @@ class Leader(Role):
     """
 
     def __init__(
-            self, node: Node, peers: List, commander=Commander, scout=Scout
+        self, node: Node, peers: List, commander=Commander, scout=Scout
     ) -> None:
         """
         Creates a new Leader Role instance
@@ -64,7 +67,7 @@ class Leader(Role):
         self.scout(self.node, self.ballot_num, self.peers).start()
 
     def do_adopted(
-            self, sender, ballot_num: Ballot, accepted_proposals: Dict[int, Proposal]
+        self, sender, ballot_num: Ballot, accepted_proposals: Dict[int, Proposal]
     ):
         """
         Performs an Adopted action
@@ -72,7 +75,9 @@ class Leader(Role):
         self.scouting = False
         self.proposals.update(accepted_proposals)
         # note that we don't re-spawn commanders here; if there are undecided proposals, the replicas will re-propose
-        self.logger.info(f"leader becoming active. Sender: {sender}. Ballot: {ballot_num}")
+        self.logger.info(
+            f"leader becoming active. Sender: {sender}. Ballot: {ballot_num}"
+        )
         self.active = True
 
     def spawn_commander(self, ballot_num: Ballot, slot: int):
@@ -105,9 +110,15 @@ class Leader(Role):
                 self.spawn_commander(self.ballot_num, slot)
             else:
                 if not self.scouting:
-                    self.logger.info(f"got PROPOSE from {sender} when not active - scouting")
+                    self.logger.info(
+                        f"got PROPOSE from {sender} when not active - scouting"
+                    )
                     self.spawn_scout()
                 else:
-                    self.logger.info(f"got PROPOSE from {sender} while scouting; ignored")
+                    self.logger.info(
+                        f"got PROPOSE from {sender} while scouting; ignored"
+                    )
         else:
-            self.logger.info(f"got PROPOSE from {sender} for a slot already being proposed")
+            self.logger.info(
+                f"got PROPOSE from {sender} for a slot already being proposed"
+            )

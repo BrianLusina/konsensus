@@ -29,8 +29,7 @@ lint:
   stage: lint
   script:
     - pip install black
-    - black tictacai
-    - black clients
+    - black
 
 sast:
   stage: test

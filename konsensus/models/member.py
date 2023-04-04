@@ -4,12 +4,16 @@ Member Model
 from typing import Optional
 import threading
 from queue import Queue
+
 # pylint: disable-next=import-error
 from .roles.seed import Seed
+
 # pylint: disable-next=import-error
 from .roles.bootstrap import Bootstrap
+
 # pylint: disable-next=import-error
 from .roles.requester import Requester
+
 # pylint: disable-next=relative-beyond-top-level
 from ..network import Network
 
@@ -29,13 +33,13 @@ class Member:
     # pylint: disable-next=missing-function-docstring
     # pylint: disable-next=too-many-arguments
     def __init__(
-            self,
-            state_machine,
-            network: Network,
-            peers,
-            seed=None,
-            seed_cls=Seed,
-            bootstrap=Bootstrap,
+        self,
+        state_machine,
+        network: Network,
+        peers,
+        seed=None,
+        seed_cls=Seed,
+        bootstrap=Bootstrap,
     ) -> None:
         self.thread: Optional[threading.Thread] = None
         self.network = network

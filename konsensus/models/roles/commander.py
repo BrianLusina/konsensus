@@ -3,10 +3,13 @@ Commander Role
 """
 from typing import List
 from math import floor
+
 # pylint: disable-next=relative-beyond-top-level)
 from ...entities.data_types import Ballot, Proposal
+
 # pylint: disable-next=relative-beyond-top-level)
 from ...entities.messages_types import Preempted, Accept, Decided, Decision
+
 # pylint: disable-next=relative-beyond-top-level)
 from ...constants import ACCEPT_RETRANSMIT
 from . import Role
@@ -23,7 +26,7 @@ class Commander(Role):
 
     # pylint: disable-next=too-many-arguments
     def __init__(
-            self, node: Node, ballot_num: Ballot, slot: int, proposal: Proposal, peers: List
+        self, node: Node, ballot_num: Ballot, slot: int, proposal: Proposal, peers: List
     ) -> None:
         """
         Creates an instance of the Commander Role

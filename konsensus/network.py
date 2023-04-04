@@ -67,7 +67,7 @@ class Network:
 
     # pylint: disable=missing-function-docstring
     def set_timer(
-            self, address, seconds: Union[int, float], callback: Callable
+        self, address, seconds: Union[int, float], callback: Callable
     ) -> Timer:
         timer = Timer(self.now + seconds, address, callback)
         heapq.heappush(self.timers, timer)

@@ -2,10 +2,13 @@
 Scout Node role
 """
 from typing import List, Dict, Tuple
+
 # pylint: disable-next=relative-beyond-top-level)
 from ...entities.data_types import Ballot, Proposal
+
 # pylint: disable-next=relative-beyond-top-level)
 from ...entities.messages_types import Prepare, Adopted, Preempted
+
 # pylint: disable-next=relative-beyond-top-level)
 from ...constants import PREPARE_RETRANSMIT
 from . import Role
@@ -48,7 +51,10 @@ class Scout(Role):
 
     # pylint: disable-next=missing-function-docstring
     def do_promise(
-            self, sender, ballot_num: Ballot, accepted_proposals: Dict[int, Tuple[Ballot, Proposal]]
+        self,
+        sender,
+        ballot_num: Ballot,
+        accepted_proposals: Dict[int, Tuple[Ballot, Proposal]],
     ):
         if ballot_num == self.ballot_num:
             self.logger.info(f"got matching promise; need {self.quorum}")

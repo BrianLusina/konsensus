@@ -3,8 +3,10 @@ Bootstrap role
 """
 from typing import List, Callable
 from itertools import cycle
+
 # pylint: disable-next=relative-beyond-top-level)
 from ...entities.messages_types import Join
+
 # pylint: disable-next=relative-beyond-top-level)
 from ...constants import JOIN_RETRANSMIT
 from . import Role
@@ -26,15 +28,15 @@ class Bootstrap(Role):
     # pylint: disable-next=missing-function-docstring
     # pylint: disable-next=too-many-arguments
     def __init__(
-            self,
-            node: Node,
-            peers: List,
-            execute_fn: Callable,
-            replica: Replica = Replica,
-            acceptor: Acceptor = Acceptor,
-            leader: Leader = Leader,
-            commander: Commander = Commander,
-            scout: Scout = Scout,
+        self,
+        node: Node,
+        peers: List,
+        execute_fn: Callable,
+        replica: Replica = Replica,
+        acceptor: Acceptor = Acceptor,
+        leader: Leader = Leader,
+        commander: Commander = Commander,
+        scout: Scout = Scout,
     ) -> None:
         super().__init__(node)
         self.execute_fn = execute_fn

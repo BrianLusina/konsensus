@@ -2,8 +2,10 @@
 Seed Node Role
 """
 from typing import List, Callable
+
 # pylint: disable-next=relative-beyond-top-level)
 from ...entities.messages_types import Welcome
+
 # pylint: disable-next=relative-beyond-top-level)
 from ...constants import JOIN_RETRANSMIT
 from . import Role
@@ -32,12 +34,12 @@ class Seed(Role):
 
     # pylint: disable-next=too-many-arguments
     def __init__(
-            self,
-            node: Node,
-            initial_state,
-            execute_fn: Callable,
-            peers: List,
-            bootstrap_cls=Bootstrap,
+        self,
+        node: Node,
+        initial_state,
+        execute_fn: Callable,
+        peers: List,
+        bootstrap_cls=Bootstrap,
     ) -> None:
         """
         Creates a new instance of the Seed Role.
@@ -74,6 +76,8 @@ class Seed(Role):
         Finish process bootstraps this node in the cluster that was just seeded.
         """
         # bootstrap this node in the cluster we just seeded
-        bootstrap = self.bootstrap_cls(self.node, peers=self.peers, execute_fn=self.execute_fn)
+        bootstrap = self.bootstrap_cls(
+            self.node, peers=self.peers, execute_fn=self.execute_fn
+        )
         bootstrap.start()
         self.stop()

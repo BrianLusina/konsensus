@@ -2,10 +2,13 @@
 Replica Role
 """
 from typing import Dict, Callable, List
+
 # pylint: disable-next=relative-beyond-top-level)
 from ...entities.data_types import Proposal
+
 # pylint: disable-next=relative-beyond-top-level)
 from ...entities.messages_types import Propose, Invoked, Welcome
+
 # pylint: disable-next=relative-beyond-top-level)
 from ...constants import LEADER_TIMEOUT
 from . import Role
@@ -25,13 +28,13 @@ class Replica(Role):
     # pylint: disable-next=missing-function-docstring
     # pylint: disable-next=too-many-arguments
     def __init__(
-            self,
-            node: Node,
-            execute_fn: Callable,
-            state,
-            slot,
-            decisions: Dict[int, Proposal],
-            peers: List,
+        self,
+        node: Node,
+        execute_fn: Callable,
+        state,
+        slot,
+        decisions: Dict[int, Proposal],
+        peers: List,
     ) -> None:
         super().__init__(node)
         self.execute_fn = execute_fn
@@ -47,7 +50,8 @@ class Replica(Role):
     # pylint: disable-next=missing-function-docstring)
     def do_invoke(self, sender, caller, client_id, input_value):
         self.logger.info(
-            f"Invoke received. Caller: {caller}, client_id: {client_id}, input_value: {input_value} sender {sender}")
+            f"Invoke received. Caller: {caller}, client_id: {client_id}, input_value: {input_value} sender {sender}"
+        )
         # making proposals
         proposal = Proposal(caller=caller, client_id=client_id, input=input_value)
         slot = next((s for s, p in self.proposals.items() if p == proposal), None)
@@ -67,7 +71,9 @@ class Replica(Role):
 
     # pylint: disable-next=missing-function-docstring)
     def do_decision(self, sender, slot, proposal: Proposal):
-        self.logger.info(f"Decision received. Slot: {slot}, proposal: {proposal} from sender {sender}")
+        self.logger.info(
+            f"Decision received. Slot: {slot}, proposal: {proposal} from sender {sender}"
+        )
 
         # handling deciding proposals
         assert not self.decisions.get(
@@ -76,7 +82,7 @@ class Replica(Role):
 
         if slot in self.decisions:
             assert (
-                    self.decisions[slot] == Proposal
+                self.decisions[slot] == Proposal
             ), f"slot {slot} already decided with {self.decisions[slot]}"
             return
 
@@ -86,9 +92,9 @@ class Replica(Role):
         # re-propose our proposal in a new slot if it lost its slot and was not a no-op
         our_proposal = self.proposals.get(slot)
         if (
-                our_proposal is not None
-                and our_proposal != proposal
-                and our_proposal.caller
+            our_proposal is not None
+            and our_proposal != proposal
+            and our_proposal.caller
         ):
             self.propose(our_proposal)
 
@@ -121,7 +127,8 @@ class Replica(Role):
     # pylint: disable-next=missing-function-docstring)
     def do_adopted(self, sender, ballot_num, accepted_proposals):
         self.logger.info(
-            f"Adopted ballot_num {ballot_num} & accepted proposalsL {accepted_proposals} from sender {sender}")
+            f"Adopted ballot_num {ballot_num} & accepted proposalsL {accepted_proposals} from sender {sender}"
+        )
         # tracking the leader
         self.latest_leader = self.node.address
         self.leader_alive()
