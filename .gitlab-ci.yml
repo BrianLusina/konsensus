@@ -29,7 +29,8 @@ lint:
   stage: lint
   script:
     - pip install black
-    - black
+    - pip install pylint
+    - pylint konsensus
 
 sast:
   stage: test
