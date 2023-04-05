@@ -72,3 +72,7 @@ jobs:
         env:
           TWINE_PASSWORD: ${{ secrets.pypi_token }}
         run: make ${{ inputs.command }}
+
+      - name: Upload Test coverage reports
+        if: ${{ inputs.command == 'test-cover' }}
+        uses: codecov/codecov-action@v3

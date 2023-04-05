@@ -16,4 +16,4 @@ jobs:
     if: ${{ github.event.workflow_run.conclusion == 'success' }}
     uses: ./.github/workflows/base_ci_workflow.yaml
     with:
-      command: test
+      command: test-cover
