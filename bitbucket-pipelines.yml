@@ -8,6 +8,7 @@ definitions:
 pipelines:
   default:
     - step:
+        name: Setup
         caches:
           - venv
         script:
@@ -19,6 +20,7 @@ pipelines:
         name: Lint
         script:
           - pip install black
+          - pip install pylint
           - make lint
 
     - step:
@@ -34,8 +36,8 @@ pipelines:
           - pip install poetry
           - make build
         artifacts:
-          - tictacai/dist/*.tar.gz
-          - tictacai/dist/*.whl
+          - dist/*.tar.gz
+          - dist/*.whl
 
     - parallel:
         - step:
@@ -45,7 +47,7 @@ pipelines:
                 variables:
                   BITBUCKET_USERNAME: $BITBUCKET_USERNAME
                   BITBUCKET_APP_PASSWORD: $BITBUCKET_APP_PASSWORD
-                  FILENAME: "tictacai/dist/*.tar.gz"
+                  FILENAME: "dist/*.tar.gz"
 
         - step:
             name: Package Wheel
@@ -54,7 +56,7 @@ pipelines:
                 variables:
                   BITBUCKET_USERNAME: $BITBUCKET_USERNAME
                   BITBUCKET_APP_PASSWORD: $BITBUCKET_APP_PASSWORD
-                  FILENAME: "tictacai/dist/*.whl"
+                  FILENAME: "dist/*.whl"
 
   pull-requests:
     '**':
@@ -71,6 +73,7 @@ pipelines:
           name: Lint
           script:
             - pip install black
+            - pip install pylint
             - make lint
 
       - step:
@@ -83,4 +86,5 @@ pipelines:
       - step:
           name: Build
           script:
+            - pip install poetry
             - make build
