@@ -2,6 +2,7 @@
 
 [![Lint](https://github.com/BrianLusina/konsensus/actions/workflows/lint.yml/badge.svg)](https://github.com/BrianLusina/konsensus/actions/workflows/lint.yml)
 [![Tests](https://github.com/BrianLusina/konsensus/actions/workflows/tests.yaml/badge.svg)](https://github.com/BrianLusina/konsensus/actions/workflows/tests.yaml)
+[![codecov](https://codecov.io/gh/BrianLusina/konsensus/branch/main/graph/badge.svg?token=8GkDyydZdQ)](https://codecov.io/gh/BrianLusina/konsensus)
 [![Build](https://github.com/BrianLusina/konsensus/actions/workflows/build.yaml/badge.svg)](https://github.com/BrianLusina/konsensus/actions/workflows/build.yaml)
 [![Publish](https://github.com/BrianLusina/konsensus/actions/workflows/publish.yaml/badge.svg)](https://github.com/BrianLusina/konsensus/actions/workflows/publish.yaml)
 [![CodeQL](https://github.com/BrianLusina/konsensus/actions/workflows/codeql.yaml/badge.svg)](https://github.com/BrianLusina/konsensus/actions/workflows/codeql.yaml)
