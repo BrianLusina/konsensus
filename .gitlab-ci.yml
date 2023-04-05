@@ -23,7 +23,7 @@ before_script:
   - python3 -m venv $POETRY_HOME
   - pip install --upgrade pip
   - pip install poetry
-  - cd tictacai && poetry install
+  - poetry install
 
 lint:
   stage: lint
@@ -57,4 +57,4 @@ package:
   script:
     - pip install build twine
     - poetry build
-    - TWINE_PASSWORD=${CI_JOB_TOKEN} TWINE_USERNAME=gitlab-ci-token twine upload --repository-url ${CI_API_V4_URL}/projects/${CI_PROJECT_ID}/packages/pypi --verbose -u '__token__' dist/*
+    - TWINE_PASSWORD=${CI_JOB_TOKEN} TWINE_USERNAME=gitlab-ci-token twine upload --repository-url ${CI_API_V4_URL}/projects/${CI_PROJECT_ID}/packages/pypi dist/*
