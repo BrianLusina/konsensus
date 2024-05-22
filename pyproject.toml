@@ -17,7 +17,7 @@ python = "^3.10"
 
 [tool.poetry.dev-dependencies]
 pylint = "^3.2.2"
-pytest = "^8.2.0"
+pytest = "^8.2.1"
 black = "^24.4.2"
 pre-commit = "^3.7.1"
 
