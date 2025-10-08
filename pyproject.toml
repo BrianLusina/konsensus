@@ -16,7 +16,7 @@ classifiers = [
 python = "^3.10"
 
 [tool.poetry.dev-dependencies]
-pylint = "^3.3.8"
+pylint = "^3.3.9"
 pytest = "^8.4.2"
 black = "^25.9.0"
 pre-commit = "^4.3.0"
